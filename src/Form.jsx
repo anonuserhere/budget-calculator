@@ -34,6 +34,11 @@ export default class Form extends React.Component {
     amount: "",
     date: "",
     expenseList: [],
+    entryBeingEdited: 0,
+    editExpense: "",
+    editCategory: "",
+    editAmount: "",
+    editDate: "",
   };
 
   displayExpense = this.expenseType.map((expense) => {
@@ -56,6 +61,16 @@ export default class Form extends React.Component {
       category: "",
       amount: "",
       date: "",
+    });
+  };
+
+  clearEdit = () => {
+    this.setState({
+      entryBeingEdited: 0,
+      editExpense: "",
+      editCategory: "",
+      editAmount: "",
+      editDate: "",
     });
   };
 
@@ -83,6 +98,101 @@ export default class Form extends React.Component {
     this.setState({
       expenseList: this.state.expenseList.filter((e) => e.id !== expense.id),
     });
+  };
+
+  beginUpdateEntry = (selectedEntry) => {
+    this.setState({
+      entryBeingEdited: selectedEntry.id,
+      editExpense: selectedEntry.expense,
+      editCategory: selectedEntry.category,
+      editAmount: selectedEntry.amount,
+      editDate: selectedEntry.date,
+    });
+  };
+
+  updateEntry = (selectedEntry) => {
+    const { editExpense, editCategory, editAmount, editDate, expenseList } =
+      this.state;
+    const modifiedList = expenseList.map((entry) =>
+      entry.id === selectedEntry.id
+        ? {
+            ...entry,
+            expense: editExpense,
+            category: editCategory,
+            amount: editAmount,
+            date: editDate,
+          }
+        : entry
+    );
+    this.setState({
+      expenseList: modifiedList,
+    });
+    this.clearEdit();
+  };
+
+  displayEdit = (selectedEntry) => {
+    const { editExpense, editCategory, editAmount, editDate } = this.state;
+    return (
+      <div>
+        <label className="form-label">Expense :</label>
+        <input
+          className="form-control"
+          type="text"
+          name="editExpense"
+          placeholder="Enter something"
+          value={editExpense}
+          onChange={this.handleChange}
+        />
+        <label className="form-label">Category :</label>
+        <select
+          className="form-control"
+          type="text"
+          name="editCategory"
+          value={editCategory}
+          onChange={this.handleChange}
+        >
+          {this.displayExpense}
+        </select>
+        <label className="form-label">Amount :</label>
+        <input
+          className="form-control"
+          type="number"
+          name="editAmount"
+          placeholder="Enter something"
+          value={editAmount}
+          onChange={this.handleChange}
+        />
+        <label className="form-label">Date :</label>
+        <input
+          className="form-control"
+          type="text"
+          name="editDate"
+          placeholder="Enter something"
+          value={editDate}
+          onChange={this.handleChange}
+        />
+        <div>
+          <button
+            disabled={
+              !this.state.editExpense ||
+              !this.state.editCategory ||
+              !this.state.editAmount ||
+              !this.state.editDate
+            }
+            className="btn btn-primary"
+            onClick={() => this.updateEntry(selectedEntry)}
+          >
+            Update
+          </button>
+          <button
+            className="btn btn-primary"
+            onClick={() => this.clearEdit(selectedEntry)}
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    );
   };
 
   render() {
@@ -142,6 +252,9 @@ export default class Form extends React.Component {
             </div>
           </form>
           <ExpenseList
+            entryBeingEdited={this.state.entryBeingEdited}
+            displayEdit={this.displayEdit}
+            beginUpdateEntry={this.beginUpdateEntry}
             expenseList={this.state.expenseList}
             deleteEntry={this.deleteEntry}
           />
