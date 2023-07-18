@@ -18,7 +18,11 @@ export default function ExpenseList({
                 displayEdit(expense)
               ) : (
                 <li key={expense.id}>
-                  <input type="checkbox" className="form-check-input" />
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id={expense.id}
+                  />
                   <p>Entry: {expense.expense}</p>
                   <p>Type: {expense.category}</p>
                   <p>Amount: {expense.amount}</p>
