@@ -39,6 +39,7 @@ export default class Form extends React.Component {
     editCategory: "",
     editAmount: "",
     editDate: "",
+    checkbox: {},
   };
 
   displayExpense = this.expenseType.map((expense) => {
@@ -195,6 +196,15 @@ export default class Form extends React.Component {
     );
   };
 
+  handleCheckbox = (expenseId) => {
+    this.setState((prevState) => ({
+      checkbox: {
+        ...prevState.checkbox,
+        [expenseId]: !prevState.checkbox[expenseId],
+      },
+    }));
+  };
+
   render() {
     return (
       <>
@@ -257,6 +267,8 @@ export default class Form extends React.Component {
             beginUpdateEntry={this.beginUpdateEntry}
             expenseList={this.state.expenseList}
             deleteEntry={this.deleteEntry}
+            checkbox={this.state.checkbox}
+            handleCheckbox={this.handleCheckbox}
           />
         </div>
       </>

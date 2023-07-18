@@ -6,6 +6,8 @@ export default function ExpenseList({
   expenseList,
   deleteEntry,
   displayEdit,
+  checkbox,
+  handleCheckbox,
 }) {
   return expenseList.length > 0 ? (
     <div className="container">
@@ -21,7 +23,8 @@ export default function ExpenseList({
                   <input
                     type="checkbox"
                     className="form-check-input"
-                    id={expense.id}
+                    checked={checkbox[expense.id]}
+                    onChange={() => handleCheckbox(expense.id)}
                   />
                   <p>Entry: {expense.expense}</p>
                   <p>Type: {expense.category}</p>
@@ -35,6 +38,7 @@ export default function ExpenseList({
                       Edit
                     </button>
                     <button
+                      disabled={!checkbox[expense.id]}
                       onClick={() => deleteEntry(expense)}
                       className="btn btn-danger"
                     >
